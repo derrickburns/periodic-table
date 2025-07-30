@@ -51,222 +51,325 @@ Each principle is tagged with a short symbol (e.g., `Co` for composability, `Op`
 
 🟪 **Si – Simplicity**
 
-Choose the simplest system design that meets current needs; resist complexity, such as additional layers, services, or generality added "just in case," until evidence shows benefit. **Example:**  The UNIX philosophy championed a small kernel with simple abstractions \[41], and the RISC architecture argued for a simpler instruction set to improve performance \[59].
+Choose the simplest system design that meets current needs; resist complexity, such as additional layers, services, or generality added "just in case," until evidence shows benefit. 
+
+**Example:**  The UNIX philosophy championed a small kernel with simple abstractions \[41], and the RISC architecture argued for a simpler instruction set to improve performance \[59].
 
 🟪 **Mo – Modularity**
 
-Partition the system into cohesive units with minimal interfaces. Each unit can be reasoned about, replaced, or evolved independently. **Example:**  The OSI model decomposes communication into layers \[48]. Parnas advocated information hiding for decomposing systems \[49].
+Partition the system into cohesive units with minimal interfaces. Each unit can be reasoned about, replaced, or evolved independently. 
+
+**Example:**  The OSI model decomposes communication into layers \[48]. Parnas advocated information hiding for decomposing systems \[49].
 
 🟪 **Co – Composability**
 
-Design components that can be safely and flexibly recombined using explicit contracts. **Example:**  Unix programs like grep and sort compose via plain text streams \[41].
+Design components that can be safely and flexibly recombined using explicit contracts. 
+
+**Example:**  Unix programs like grep and sort compose via plain text streams \[41].
 
 🟪 **Ex – Extensibility**
 
-Allow user-defined extensions (e.g., plugins) without modifying the core system. **Example:**  Unix allows adding tools without kernel changes \[41].
+Allow user-defined extensions (e.g., plugins) without modifying the core system. 
+
+**Example:**  Unix allows adding tools without kernel changes \[41].
 
 🟪 **Pm – Policy/Mechanism Separation**
 
-Separate policy (what) from mechanism (how). **Example:**  Hydra OS separated mechanisms in the kernel from policies in user modules \[32].
+Separate policy (what) from mechanism (how). 
+
+**Example:**  Hydra OS separated mechanisms in the kernel from policies in user modules \[32].
 
 🟪 **Gr – Generalized Design**
 
-Create a general core with explicit variation points. **Example:**  C++ STL uses templates; Postgres supports user-defined types \[45, 46].
+Create a general core with explicit variation points. 
+
+**Example:**  C++ STL uses templates; Postgres supports user-defined types \[45, 46].
 
 🟪 **Ui – Uniform Interface**
 
-Expose a consistent interface regardless of internal implementation. **Example:**  Unix and Plan 9 treat all resources as files \[41, 58].
+Expose a consistent interface regardless of internal implementation. 
+
+**Example:**  Unix and Plan 9 treat all resources as files \[41, 58].
 
 🟧 Group 2: Efficiency
 
 🟧 **Sc – Scalability**
 
-Design the system to handle growth in data, traffic, or nodes with near-linear cost or latency. **Example:**  MapReduce divides work into parallel tasks with minimal coordination \[10]. Dynamo partitions data and replicates via peer-to-peer protocols \[12].
+Design the system to handle growth in data, traffic, or nodes with near-linear cost or latency. 
 
-🟧 **Rc – Reuse of ComputationAvoid redundant work by caching or incrementally updating intermediate results. **Example:**  B+trees support reuse by preserving sorted order and enabling efficient searches \[2].
+**Example:**  MapReduce divides work into parallel tasks with minimal coordination \[10]. Dynamo partitions data and replicates via peer-to-peer protocols \[12].
+
+🟧 **Rc – Reuse of ComputationAvoid redundant work by caching or incrementally updating intermediate results. 
+
+**Example:**  B+trees support reuse by preserving sorted order and enabling efficient searches \[2].
 
 🟧 **Wv – Work Avoidance**
 
-Skip computation that would not alter externally observable results. **Example:**  Lazy evaluation defers work until needed, avoiding unnecessary computation \[19].
+Skip computation that would not alter externally observable results. 
+
+**Example:**  Lazy evaluation defers work until needed, avoiding unnecessary computation \[19].
 
 🟧 **Cc – Common-Case Specialization**
 
-Optimize for frequently executed paths or data cases. **Example:**  RISC architecture emphasized common instructions \[59]. JIT compilers cache fast-path methods \[5].
+Optimize for frequently executed paths or data cases. 
+
+**Example:**  RISC architecture emphasized common instructions \[59]. JIT compilers cache fast-path methods \[5].
+
 
 🟧 **Bo – Bottleneck-Oriented Optimization**
 
-Identify and focus optimization efforts on the tightest system constraint. **Example:**  Replicating requests can reduce tail latencies caused by slow stragglers \[9].
+Identify and focus optimization efforts on the tightest system constraint. 
+
+**Example:**  Replicating requests can reduce tail latencies caused by slow stragglers \[9].
 
 🟧 **Ha – Hardware-Aware Design**
 
-Tailor algorithms to match underlying hardware characteristics. **Example:**  BLAS libraries use hardware-tuned kernels for performance \[31].
+Tailor algorithms to match underlying hardware characteristics. 
+
+**Example:**  BLAS libraries use hardware-tuned kernels for performance \[31].
 
 🟧 **Op – Optimistic Design**
 
-Proceed assuming common-case success; handle failure as an exception. **Example:**  Optimistic concurrency control executes transactions lock-free and rolls back on conflict \[24].
+Proceed assuming common-case success; handle failure as an exception. 
+
+**Example:**  Optimistic concurrency control executes transactions lock-free and rolls back on conflict \[24].
 
 🟧 **La – Learned Approximation**
 
-Use models trained on data to replace handcrafted algorithms. **Example:**  Perceptron branch predictors outperform static heuristics by learning from behavior \[22].
+Use models trained on data to replace handcrafted algorithms. 
+
+**Example:**  Perceptron branch predictors outperform static heuristics by learning from behavior \[22].
 
 
 #🟨 Group 3: Semantics
 
 🟨 **Al – Abstraction Lifting**
 
-Wrap low-level operations behind a high-level interface or DSL that expresses intent. **Example:**  Codd’s relational model enables SQL to specify what to retrieve; the DBMS decides how \[44].
+Wrap low-level operations behind a high-level interface or DSL that expresses intent. 
+
+**Example:**  Codd’s relational model enables SQL to specify what to retrieve; the DBMS decides how \[44].
 
 🟨 **Lu – Language Homogeneity**
 
-Use a consistent intermediate representation to align semantics and simplify tooling. **Example:**  LLVM uses a typed, SSA-based IR shared across many languages \[30].
+Use a consistent intermediate representation to align semantics and simplify tooling. 
+
+**Example:**  LLVM uses a typed, SSA-based IR shared across many languages \[30].
 
 🟨 **Se – Semantically Explicit Interfaces**
 
-Define observable semantics precisely (visibility, durability, ordering). **Example:**  SQL isolation levels and RPC semantics define guarantees \[3, 4].
+Define observable semantics precisely (visibility, durability, ordering). 
+
+**Example:**  SQL isolation levels and RPC semantics define guarantees \[3, 4].
 
 🟨 **Fs – Formal Specification**
 
-Use mathematical/logical models to describe behavior. **Example:**  TLA+ models concurrency and is used for formal verification \[27].
+Use mathematical/logical models to describe behavior. 
+
+**Example:**  TLA+ models concurrency and is used for formal verification \[27].
 
 🟨 **Ig – Invariant-Guided Transformation**
 
-Use formally defined invariants to safely optimize or refactor. **Example:**  SSA form in compilers and query rewrite rules in DBMSs \[8, 44].
+Use formally defined invariants to safely optimize or refactor. 
+
+**Example:**  SSA form in compilers and query rewrite rules in DBMSs \[8, 44].
 
 ⬛ Group 4: Distribution
 
 ⬛ **Lt – Location Transparency**
 
-Hide the physical location of resources behind abstract handles. **Example:**  RPC systems allow invoking remote services as if local \[4].
+Hide the physical location of resources behind abstract handles. 
+
+**Example:**  RPC systems allow invoking remote services as if local \[4].
 
 ⬛ **Dc – Decentralized Control**
 
-Avoid central points of coordination to improve availability and scalability. **Example:**  Dynamo uses consistent hashing and gossip protocols to eliminate central coordination \[12].
+Avoid central points of coordination to improve availability and scalability. 
+
+**Example:**  Dynamo uses consistent hashing and gossip protocols to eliminate central coordination \[12].
 
 ⬛ **Fp – Function Placement**
 
-Execute functionality where context is available to reduce overhead. **Example:**  End-to-end argument advocates placing reliability checks at communication endpoints [42].
+Execute functionality where context is available to reduce overhead. 
+
+**Example:**  End-to-end argument advocates placing reliability checks at communication endpoints [42].
 
 ⬛ **Lo – Locality of Reference**
 
-Keep related data and computation close in space/time to improve performance. **Example:**  The working-set model formalizes temporal locality for memory \[11].
+Keep related data and computation close in space/time to improve performance. 
+
+**Example:**  The working-set model formalizes temporal locality for memory \[11].
 
 ⬛ **Lc – Logical Centralization**
 
-Use a centralized logic layer over a physically distributed system. **Example:**  SDN centralizes control for global network policy optimization \[53].
+Use a centralized logic layer over a physically distributed system. 
+
+**Example:**  SDN centralizes control for global network policy optimization \[53].
 
 ⬛ **Fa – Fate Sharing**
 
-Design so that dependent components fail together. **Example:**  Internet design keeps state at endpoints; routers are stateless and can fail independently \[50].
+Design so that dependent components fail together. 
+
+**Example:**  Internet design keeps state at endpoints; routers are stateless and can fail independently \[50].
 
 
 🟩 Group 5: Planning
 
 🟩 **Ep – Equivalence-Based Planning**
 
-Use rewrite rules to explore logically equivalent alternatives and defer final decision to later cost analysis. **Example:**  Starburst query optimizer applies relational algebra equivalences before choosing plans \[39].
+Use rewrite rules to explore logically equivalent alternatives and defer final decision to later cost analysis. 
+
+**Example:**  Starburst query optimizer applies relational algebra equivalences before choosing plans \[39].
 
 🟩 **Cm – Cost-Based Planning**
 
-Use models of resource cost (e.g., I/O, CPU) to choose between implementation strategies. **Example:**  System R's optimizer selects query plans by estimating cost of each \[44].
+Use models of resource cost (e.g., I/O, CPU) to choose between implementation strategies. 
+
+**Example:**  System R's optimizer selects query plans by estimating cost of each \[44].
 
 🟩 **Cp – Constraint-Based Planning**
 
-Encode constraints (hard or soft) and use solvers to generate valid or optimal configurations. **Example:**  Quincy formulates cluster scheduling as a constrained optimization problem \[21].
+Encode constraints (hard or soft) and use solvers to generate valid or optimal configurations. 
+
+**Example:**  Quincy formulates cluster scheduling as a constrained optimization problem \[21].
 
 🟩 **Gd – Goal-Directed Planning**
 
-From a declarative goal, synthesize an execution plan automatically. **Example:**  Cascades optimizer transforms SQL queries into efficient plans through rule-based search \[14].
+From a declarative goal, synthesize an execution plan automatically. 
+
+**Example:**  Cascades optimizer transforms SQL queries into efficient plans through rule-based search \[14].
 
 🟩 **Bb – Black-Box Tuning**
 
-Search parameter/configuration space by measuring candidate performance rather than modeling it. **Example:**  ATLAS tunes BLAS kernels by empirically testing candidate configurations \[47].
+Search parameter/configuration space by measuring candidate performance rather than modeling it. 
+
+**Example:**  ATLAS tunes BLAS kernels by empirically testing candidate configurations \[47].
 
 🟩 **Ah – Advisory Hinting**
 
-Support non-binding user hints to guide system behavior. **Example:**  Lampson advocated optional hints that help performance but don’t affect correctness \[29].
+Support non-binding user hints to guide system behavior. 
+
+**Example:**  Lampson advocated optional hints that help performance but don’t affect correctness \[29].
 
 🟦 Group 6: Operability
 
 🟦 **Ad – Adaptive Processing**
 
-Monitor runtime conditions and adjust system behavior accordingly. **Example:**  Eddies adapt query execution strategies in response to changing data characteristics \[1].
+Monitor runtime conditions and adjust system behavior accordingly. 
+
+**Example:**  Eddies adapt query execution strategies in response to changing data characteristics \[1].
 
 🟦 **Ec – Elasticity**
 
-Dynamically allocate or reclaim resources based on demand. **Example:**  Hosting center systems scale resources based on utility functions and load \[6].
+Dynamically allocate or reclaim resources based on demand. 
+
+**Example:**  Hosting center systems scale resources based on utility functions and load \[6].
 
 🟦 **Wa – Workload-Aware Optimization**
 
-Adapt data layout, algorithms, or scheduling to the observed workload. **Example:**  Database cracking incrementally reorganizes data based on queries \[20].
+Adapt data layout, algorithms, or scheduling to the observed workload. 
+
+**Example:**  Database cracking incrementally reorganizes data based on queries \[20].
 
 🟦 **Au – Automation and Autonomy**
 
-Automate system tuning, recovery, or adaptation without human intervention. **Example:**  AutoAdmin suggests indexes based on observed workloads \[7].
+Automate system tuning, recovery, or adaptation without human intervention. 
+
+**Example:**  AutoAdmin suggests indexes based on observed workloads \[7].
 
 🟦 **Ho – Human Observability**
 
-Expose internal state for debugging and performance analysis. **Example:**  Paxson’s end-to-end Internet measurements aid in fault diagnosis \[37].
+Expose internal state for debugging and performance analysis. 
+
+**Example:**  Paxson’s end-to-end Internet measurements aid in fault diagnosis \[37].
 
 🟦 **Ev – Evolvability**
 
-Support ongoing system evolution with minimal disruption. **Example:**  Parnas’s modular design enables safe changes without breaking clients \[36, 49].
+Support ongoing system evolution with minimal disruption. 
+
+**Example:**  Parnas’s modular design enables safe changes without breaking clients \[36, 49].
 
 🟦 **Pi – Performance Isolation**
 
-Ensure one workload does not degrade others in shared environments. **Example:**  VMware and container systems enforce resource limits across tenants \[55].
+Ensure one workload does not degrade others in shared environments. 
+
+**Example:**  VMware and container systems enforce resource limits across tenants \[55].
 
 
 🟥 Group 7: Reliability
 
 🟥 **Ft – Fault Tolerance**
 
-Continue functioning (possibly in degraded mode) despite component failures. **Example:**  Tandem systems used replicated hardware; GFS recovers from faults through replication \[15, 51].
+Continue functioning (possibly in degraded mode) despite component failures. 
+
+**Example:**  Tandem systems used replicated hardware; GFS recovers from faults through replication \[15, 51].
 
 🟥 **Is – Isolation for Correctness**
 
-Prevent unintended interference between concurrent components. **Example:**  Two-phase locking ensures ACID-compliant isolation in databases \[16].
+Prevent unintended interference between concurrent components. 
+
+**Example:**  Two-phase locking ensures ACID-compliant isolation in databases \[16].
 
 🟥 **At – Atomic Execution**
 
-Execute a set of operations indivisibly: all or none take effect. **Example:**  Transactional memory ensures that a memory block either commits or aborts atomically \[18].
+Execute a set of operations indivisibly: all or none take effect. 
+
+**Example:**  Transactional memory ensures that a memory block either commits or aborts atomically \[18].
 
 🟥 **Cr – Consistency Relaxation**
 
-Relax strict consistency guarantees to improve availability or performance. **Example:**  Dynamo offers eventual consistency; Spanner relaxes serializability using bounded time uncertainty \[12, 59].
+Relax strict consistency guarantees to improve availability or performance. 
+
+**Example:**  Dynamo offers eventual consistency; Spanner relaxes serializability using bounded time uncertainty \[12, 59].
 
 🟥 **De – Deterministic Execution**
 
-Ensure the system produces the same observable output for the same input. **Example:**  Deterministic replay systems like ReVirt and ODR support reproducible debugging \[52, 54].
+Ensure the system produces the same observable output for the same input. 
+
+**Example:**  Deterministic replay systems like ReVirt and ODR support reproducible debugging \[52, 54].
 
 🟥 **Cd – Crash-Only Design**
 
-Design systems to safely crash and recover, avoiding complex error-handling logic. **Example:**  GFS and similar systems reboot into a clean state rather than attempting in-place repair \[13].
+Design systems to safely crash and recover, avoiding complex error-handling logic. 
+
+**Example:**  GFS and similar systems reboot into a clean state rather than attempting in-place repair \[13].
 
 🟫 Group 8: Security
 
 🟫 **Sy – Security via Isolation**
 
-Use strong isolation boundaries to contain faults or malicious activity. **Example:**  Virtual machine monitors isolate guests and intercept privileged operations \[40].
+Use strong isolation boundaries to contain faults or malicious activity. 
+
+**Example:**  Virtual machine monitors isolate guests and intercept privileged operations \[40].
 
 🟫 **Ac – Access Control and Auditing**
 
-Define and enforce permissions; log accesses for accountability. **Example:**  Lampson's taxonomy underpins ACLs, capabilities, and audit trails \[28].
+Define and enforce permissions; log accesses for accountability. 
+
+**Example:**  Lampson's taxonomy underpins ACLs, capabilities, and audit trails \[28].
 
 🟫 **Lp – Least Privilege**
 
-Grant only the minimum required authority to users or components. **Example:**  Seeley's postmortem on the 1988 worm highlighted excess privilege as a vector \[35].
+Grant only the minimum required authority to users or components. 
+
+**Example:**  Seeley's postmortem on the 1988 worm highlighted excess privilege as a vector \[35].
 
 🟫 **Tq – Trust via Quorum**
 
-Require agreement among independent nodes to tolerate faults or attacks. **Example:**  Paxos relies on majority consensus to maintain correctness under failures \[26].
+Require agreement among independent nodes to tolerate faults or attacks. 
+
+**Example:**  Paxos relies on majority consensus to maintain correctness under failures \[26].
 
 🟫 **Cf – Conservative Defaults**
 
-Use restrictive defaults to minimize accidental exposure or risk. **Example:**  Default-deny access policies require explicit permission to grant access \[43].
+Use restrictive defaults to minimize accidental exposure or risk. 
+
+**Example:**  Default-deny access policies require explicit permission to grant access \[43].
 
 🟫 **Sa – Safety by Construction**
 
-Design code or APIs to eliminate classes of bugs by design. **Example:**  Rust’s ownership model prevents memory errors; seL4 is formally verified \[34, 56].
+Design code or APIs to eliminate classes of bugs by design. 
+
+**Example:**  Rust’s ownership model prevents memory errors; seL4 is formally verified \[34, 56].
 
 ## 4. CASE STUDY
 
