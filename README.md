@@ -85,6 +85,11 @@ Design a single core with explicit variation points like types, knobs, or plug-i
 
 **Example:** The C++ Standard Template Library is a collection of containers, iterators, and algorithms parameterized by templates [45]. Postgres allows users to add types and operators to the core database system [46].
 
+🟪 **Ui – Uniform Interface**  Design components to expose the same abstract interface to clients, regardless of internal differences. Enables general tooling and composability.
+
+**Example:** Unix treats everything as a file—sockets, devices, pipes—enabling consistent use of read/write operations [57, 58].
+
+
 ## 🟧 Group 2: Efficiency
 
 🟧 **Sc – Scalability**
@@ -194,6 +199,19 @@ Place related data and operations close together in time and space to preserve a
 
 **Example:** The working-set model formalises temporal locality to keep hot pages in memory \[11].
 
+⬛ **Lc – Logical Centralization**
+
+Use centralized decision-making logic even when components are physically distributed. This often simplifies coordination and policy enforcement.
+
+**Example:** OpenFlow separates control and data planes, centralizing logic in a controller while maintaining distributed data forwarding \[53].
+
+⬛ **Fs – Fate Sharing**
+
+Tie the failure semantics of system components to shared context or ownership, ensuring that logically connected elements fail together.
+
+**Example:**  The Internet Protocol’s fate-sharing model embeds state at the edges, such that intermediate node failure does not break higher-level logic \[50].
+
+
 ## 🟩 Group 5: Planning
 
 🟩 **Ep – Equivalence-based Planning**
@@ -270,6 +288,13 @@ Design so the system can change with minimal downtime or rewrites and do so with
 
 **Example:** Parnas presents how a modular design makes system easier to extend without disruptive rewrites \[36].
 
+🟦 **Pi – Performance Isolation**
+
+Ensure one workload’s behavior does not adversely affect another’s performance or correctness, especially in shared environments.
+
+**Example:** Virtual machines enforce resource partitioning, maintaining QoS for tenants in cloud settings \[55].
+
+
 ## 🟥 Group 7: Reliability
 
 🟥 **Ft – Fault Tolerance**
@@ -295,6 +320,16 @@ Group multiple operations so they appear indivisible, either all take effect or 
 Deliberately relax strong consistency or ordering constraints, but only within documented bounds, to improve performance, availability, or concurrency.
 
 **Example:** Bayou lets mobile clients update replicas while disconnected, guaranteeing eventual convergence when replicas reconnect, trading strict consistency for offline availability \[38].
+
+
+🟥 **De – Deterministic Execution**
+
+
+Design systems to produce the same observable behavior given the same inputs. Improves reproducibility, auditing, and fault recovery.
+
+**Example:**  Systems like ReVirt and ODR use deterministic execution to enable replay-based debugging and intrusion analysis \[54].
+
+🟥 Cd – Crash-Only DesignTreat crashes as a normal mode of recovery. Eliminate explicit shutdown paths and design for instant restart. This simplifies error handling and improves resilience.Example: Systems like the Google File System and Crash-Only Software treat process death as routine, relying on restart rather than intricate cleanup [51]
 
 ## 🟫 Group 8: Security
 
@@ -364,101 +399,122 @@ System design spans diverse domains and vocabularies, which can make shared disc
 
 ## REFERENCES
 
-[1] Ron Avnur and Joseph M. Hellerstein. *Eddies: Continuously Adaptive Query Processing*. In SIGMOD, 2000.
+[1] Ron Avnur and Joseph M. Hellerstein. Eddies: Continuously Adaptive Query Processing. In SIGMOD, 2000. Supports Adaptive Processing (Ad).
 
-[2] Rudolf Bayer and Edward McCreight. *Organization and Maintenance of Large Ordered Indexes*. Acta Informatica, 1972.
+[2] Rudolf Bayer and Edward McCreight. Organization and Maintenance of Large Ordered Indexes. Acta Informatica, 1972. Supports Reuse of Computation (Rc).
 
-[3] Hal Berenson, Philip A. Bernstein, Jim Gray, Jim Melton, Elizabeth J. O’Neil, and Patrick E. O’Neil. *A Critique of ANSI SQL Isolation Levels*. In SIGMOD, 1995.
+[3] Hal Berenson, Philip A. Bernstein, Jim Gray, Jim Melton, Elizabeth J. O’Neil, and Patrick E. O’Neil. A Critique of ANSI SQL Isolation Levels. In SIGMOD, 1995. Supports Semantically Explicit Interfaces (Se).
 
-[4] Andrew D. Birrell and Bruce J. Nelson. *Implementing Remote Procedure Calls*. ACM TOCS, 1984.
+[4] Andrew D. Birrell and Bruce J. Nelson. Implementing Remote Procedure Calls. ACM TOCS, 1984. Supports Location Transparency (Lt).
 
-[5] Craig Chambers and David Ungar. *Customization: Optimizing Compiler Technology for SELF*. In PLDI, 1989.
+[5] Craig Chambers and David Ungar. Customization: Optimizing Compiler Technology for SELF. In PLDI, 1989. Supports Common-Case Specialization (Cc).
 
-[6] Jeffrey S. Chase et al. *Managing Energy and Server Resources in Hosting Centers*. In SOSP, 2001.
+[6] Jeffrey S. Chase et al. Managing Energy and Server Resources in Hosting Centers. In SOSP, 2001. Supports Elasticity (Ec).
 
-[7] Surajit Chaudhuri and Vivek R. Narasayya. *An Efficient, Cost-Driven Index Selection Tool for Microsoft SQL Server*. In VLDB, 1997.
+[7] Surajit Chaudhuri and Vivek R. Narasayya. An Efficient, Cost-Driven Index Selection Tool for Microsoft SQL Server. In VLDB, 1997. Supports Automation and Autonomy (Au).
 
-[8] Ron Cytron et al. *Efficiently Computing Static Single Assignment Form and the Control Dependence Graph*. ACM TOPLAS, 1991.
+[8] Ron Cytron et al. Efficiently Computing Static Single Assignment Form and the Control Dependence Graph. ACM TOPLAS, 1991. Supports Invariant-Guided Transformation (Ig).
 
-[9] Jeff Dean and Luiz André Barroso. *The Tail at Scale*. Communications of the ACM, 2013.
+[9] Jeff Dean and Luiz André Barroso. The Tail at Scale. Communications of the ACM, 2013. Illustrates Bottleneck-Oriented Optimization (Bo) and Workload-Aware Optimization (Wa).
 
-[10] Jeffrey Dean and Sanjay Ghemawat. *MapReduce: Simplified Data Processing on Large Clusters*. In OSDI, 2004.
+[10] Jeffrey Dean and Sanjay Ghemawat. MapReduce: Simplified Data Processing on Large Clusters. In OSDI, 2004. Supports Scalability (Sc).
 
-[11] Peter J. Denning. *The Working Set Model for Program Behavior*. Communications of the ACM, 1968.
+[11] Peter J. Denning. The Working Set Model for Program Behavior. Communications of the ACM, 1968. Supports Locality of Reference (Lo).
 
-[12] Giuseppe DeCandia et al. *Dynamo: Amazon’s Highly Available Key-Value Store*. In SOSP, 2007.
+[12] Giuseppe DeCandia et al. Dynamo: Amazon’s Highly Available Key-Value Store. In SOSP, 2007. Supports Decentralized Control (Dc).
 
-[13] Sally Floyd and Van Jacobson. *Random Early Detection Gateways for Congestion Avoidance*. In SIGCOMM, 1993.
+[13] Sally Floyd and Van Jacobson. Random Early Detection Gateways for Congestion Avoidance. In SIGCOMM, 1993.
 
-[14] Goetz Graefe. *The Cascades Framework for Query Optimisation*. HPL Technical Report HPL-95-18, 1995.
+[14] Goetz Graefe. The Cascades Framework for Query Optimisation. HPL Technical Report HPL-95-18, 1995. Supports Goal-Directed Planning (Gd).
 
-[15] Jim Gray. *Why Do Computers Stop and What Can Be Done About It?* Tandem Technical Report, 1986.
+[15] Jim Gray. Why Do Computers Stop and What Can Be Done About It? Tandem Technical Report, 1986. Supports Fault Tolerance (Ft).
 
-[16] Jim Gray and Andreas Reuter. *Transaction Processing: Concepts and Techniques*. Morgan Kaufmann, 1993.
+[16] Jim Gray and Andreas Reuter. Transaction Processing: Concepts and Techniques. Morgan Kaufmann, 1993. Supports Isolation for Correctness (Is).
 
-[17] J. N. Gray et al. *Granularity of Locks in a Shared Data Base*. In VLDB, 1975.
+[17] J. N. Gray et al. Granularity of Locks in a Shared Data Base. In VLDB, 1975.
 
-[18] Maurice Herlihy and J. Eliot B. Moss. *Transactional Memory: Architectural Support for Lock-Free Data Structures*. In ISCA, 1993.
+[18] Maurice Herlihy and J. Eliot B. Moss. Transactional Memory: Architectural Support for Lock-Free Data Structures. In ISCA, 1993. Supports Atomic Execution (At).
 
-[19] John Hughes. *Why Functional Programming Matters*. In *Research Topics in Functional Programming*, Addison-Wesley, 1990.
+[19] John Hughes. Why Functional Programming Matters. In Research Topics in Functional Programming, Addison-Wesley, 1990. Supports Work Avoidance (Wv).
 
-[20] Stratos Idreos et al. *Database Cracking*. In CIDR, 2007.
+[20] Stratos Idreos et al. Database Cracking. In CIDR, 2007. Supports Workload-Aware Optimization (Wa).
 
-[21] Michael Isard et al. *Quincy: Fair Scheduling for Distributed Computing Clusters*. In SOSP, 2009.
+[21] Michael Isard et al. Quincy: Fair Scheduling for Distributed Computing Clusters. In SOSP, 2009. Supports Constraint-Based Planning (Cp).
 
-[22] Daniel A. Jiménez and Calvin Lin. *Dynamic Branch Prediction with Perceptrons*. In HPCA, 2001.
+[22] Daniel A. Jiménez and Calvin Lin. Dynamic Branch Prediction with Perceptrons. In HPCA, 2001. Supports Learned Approximation (La).
 
-[23] Donald E. Knuth. *Structured Programming with go to Statements*. ACM Computing Surveys, 1974.
+[23] Donald E. Knuth. Structured Programming with go to Statements. ACM Computing Surveys, 1974. Supports Simplicity (Si).
 
-[24] H. T. Kung and John T. Robinson. *On Optimistic Methods for Concurrency Control*. ACM TODS, 1981.
+[24] H. T. Kung and John T. Robinson. On Optimistic Methods for Concurrency Control. ACM TODS, 1981. Supports Optimistic Design (Op).
 
-[25] Leslie Lamport. *The Part-Time Parliament*. ACM TOCS, 1998.
+[25] Leslie Lamport. The Part-Time Parliament. ACM TOCS, 1998.
 
-[26] Leslie Lamport. *The Part-Time Parliament*. ACM TOCS, 1998.
+[26] Leslie Lamport. The Part-Time Parliament. ACM TOCS, 1998. Supports Trust via Quorum (Tq).
 
-[27] Leslie Lamport. *Specifying Systems: The TLA+ Language and Tools for Hardware and Software Engineers*. Addison-Wesley, 2002.
+[27] Leslie Lamport. Specifying Systems: The TLA+ Language and Tools for Hardware and Software Engineers. Addison-Wesley, 2002. Supports Formal Specification (Fs).
 
-[28] Butler W. Lampson. *Protection*. ACM Operating Systems Review, 1974.
+[28] Butler W. Lampson. Protection. ACM Operating Systems Review, 1974. Supports Access Control and Auditing (Ac).
 
-[29] Butler W. Lampson. *Hints for Computer System Design*. ACM Operating Systems Review, 1983.
+[29] Butler W. Lampson. Hints for Computer System Design. ACM Operating Systems Review, 1983. Supports Advisory Hinting (Ah).
 
-[30] Chris Lattner and Vikram Adve. *LLVM: A Compilation Framework for Lifelong Program Analysis & Transformation*. In CGO, 2004.
+[30] Chris Lattner and Vikram Adve. LLVM: A Compilation Framework for Lifelong Program Analysis & Transformation. In CGO, 2004. Supports Language Homogeneity (Lu).
 
-[31] C. L. Lawson et al. *Basic Linear Algebra Subprograms for Fortran Usage*. ACM TOMS, 1979.
+[31] C. L. Lawson et al. Basic Linear Algebra Subprograms for Fortran Usage. ACM TOMS, 1979. Supports Hardware-Aware Design (Ha).
 
-[32] R. Levin et al. *Policy/Mechanism Separation in Hydra*. In SOSP, 1975.
+[32] R. Levin et al. Policy/Mechanism Separation in Hydra. In SOSP, 1975. Supports Policy/Mechanism Separation (Pm).
 
-[33] Henry Lieberman. *Your Wish is My Command: Programming by Example*. Morgan Kaufmann, 2001.
+[33] Henry Lieberman. Your Wish is My Command: Programming by Example. Morgan Kaufmann, 2001. Supports Automation and Autonomy (Au).
 
-[34] Nicholas D. Matsakis and Felix Klock. *The Rust Language*. In ACM SIGAda, 2014.
+[34] Nicholas D. Matsakis and Felix Klock. The Rust Language. In ACM SIGAda, 2014. Supports Safety by Construction (Sa).
 
-[35] Robert T. Morris. *A Tour of the Worm*. USENIX, 1989.
+[35] Robert T. Morris. A Tour of the Worm. USENIX, 1989. Supports Least Privilege (Lp).
 
-[36] David L. Parnas. *Designing Software for Ease of Extension and Contraction*. IEEE TSE, 1979.
+[36] David L. Parnas. Designing Software for Ease of Extension and Contraction. IEEE TSE, 1979. Supports Evolvability (Ev).
 
-[37] Vern Paxson. *End-to-End Internet Packet Dynamics*. IEEE/ACM TON, 1999.
+[37] Vern Paxson. End-to-End Internet Packet Dynamics. IEEE/ACM TON, 1999. Supports Human Observability (Ho).
 
-[38] K. Petersen et al. *Flexible Update Propagation for Weakly Consistent Replication*. In SOSP, 1997.
+[38] K. Petersen et al. Flexible Update Propagation for Weakly Consistent Replication. In SOSP, 1997. Supports Consistency Relaxation (Cr).
 
-[39] Hamid Pirahesh et al. *Extensible/Rule-Based Query Rewrite Optimization in Starburst*. In SIGMOD, 1992.
+[39] Hamid Pirahesh et al. Extensible/Rule-Based Query Rewrite Optimization in Starburst. In SIGMOD, 1992. Supports Equivalence-Based Planning (Ep).
 
-[40] Gerald J. Popek and Robert P. Goldberg. *Formal Requirements for Virtualizable Third Generation Architectures*. Communications of the ACM, 1974.
+[40] Gerald J. Popek and Robert P. Goldberg. Formal Requirements for Virtualizable Third Generation Architectures. Communications of the ACM, 1974. Supports Security via Isolation (Sy).
 
-[41] Dennis M. Ritchie and Ken Thompson. *The UNIX Time-Sharing System*. Communications of the ACM, 1974.
+[41] Dennis M. Ritchie and Ken Thompson. The UNIX Time-Sharing System. Communications of the ACM, 1974. Supports Uniform Interface (Ui) and Composability (Co).
 
-[42] J. H. Saltzer et al. *End-to-End Arguments in System Design*. ACM TOCS, 1984.
+[42] J. H. Saltzer et al. End-to-End Arguments in System Design. ACM TOCS, 1984. Supports Function Placement (Fp).
 
-[43] Jerome H. Saltzer and Michael D. Schroeder. *The Protection of Information in Computer Systems*. Proc. IEEE, 1975.
+[43] Jerome H. Saltzer and Michael D. Schroeder. The Protection of Information in Computer Systems. Proc. IEEE, 1975. Supports Conservative Defaults (Cf).
 
-[44] Patricia G. Selinger et al. *Access Path Selection in a Relational Database Management System*. In SIGMOD, 1979.
+[44] Patricia G. Selinger et al. Access Path Selection in a Relational Database Management System. In SIGMOD, 1979. Supports Abstraction Lifting (Al), Equivalence-Based Planning (Ep), and Cost-Based Planning (Cm).
 
-[45] Alexander A. Stepanov and Meng Lee. *The Standard Template Library*. HP Laboratories Technical Report, 1994. 
+[45] Alexander A. Stepanov and Meng Lee. The Standard Template Library. HP Laboratories Technical Report, 1994. Supports Generalized Design (Gr).
 
-[46] Michael Stonebraker and Lawrence A. Rowe. *The Design of POSTGRES*. In SIGMOD, 1986.
+[46] Michael Stonebraker and Lawrence A. Rowe. The Design of POSTGRES. In SIGMOD, 1986. Supports Generalized Design (Gr).
 
-[47] R. Clint Whaley and Jack J. Dongarra. *Automatically Tuned Linear Algebra Software*. In SC, 1998.
+[47] R. Clint Whaley and Jack J. Dongarra. Automatically Tuned Linear Algebra Software. In SC, 1998. Supports Black-Box Tuning (Bb).
 
-[48] Hubert Zimmermann. *OSI Reference Model – The ISO Model of Architecture for Open Systems Interconnection*. IEEE Transactions on Communications, 1980.
+[48] Hubert Zimmermann. OSI Reference Model – The ISO Model of Architecture for Open Systems Interconnection. IEEE Transactions on Communications, 1980. Supports Modularity (Mo)
+
+[49] David L. Parnas. On the Criteria To Be Used in Decomposing Systems into Modules. Communications of the ACM, 1972. Supports Modularity (Mo) and Evolvability (Ev).
+
+[50] David D. Clark. The Design Philosophy of the DARPA Internet Protocols. In SIGCOMM, 1988. Introduces Function Placement (Fp) and Fate Sharing (Fs).
+
+[51] George Candea and Armando Fox. Crash-Only Software. In HOTOS, 2001. Introduces Crash-Only Design (Cd); aligns with Fault Tolerance (Ft) and Atomic Execution (At).
+
+[52] Sudipta Chattopadhyay, Abhik Roychoudhury, and Tulika Mitra. ODR: Output-Derived Replay for Multicore Debugging. In PLDI, 2010. Example of Deterministic Execution (De); supports Ft and Formal Specification (Fs).
+
+[53] Nick McKeown et al. OpenFlow: Enabling Innovation in Campus Networks. ACM SIGCOMM CCR, 2008. Example of Logical Centralization (Lc), contrasts with Decentralized Control (Dc).
+
+[54] George W. Dunlap et al. ReVirt: Enabling Intrusion Analysis through Virtual-Machine Logging and Replay. In OSDI, 2002. Reinforces Deterministic Execution (De) and Formal Specification (Fs).[55] Brandon Klein et al. Performance Isolation Through Virtualization. In OSDI, 2007. Demonstrates Performance Isolation (Pi) in multitenant systems; related to Isolation (Is).
+
+[56] Gerwin Klein et al. seL4: Formal Verification of an OS Kernel. In SOSP, 2009. Shows Formal Specification (Fs) and Safety by Construction (Sa) in practice.
+
+[57] Dennis M. Ritchie and Ken Thompson. The UNIX Time-Sharing System. Communications of the ACM, 1974. Historical basis for Uniform Interface (Ui) and Composability (Co).
+
+[58] LWN.net. Everything is a File. https://lwn.net/Articles/23634/, 2002. Supports Uniform Interface (Ui) and Composability (Co).
+
+[59] Jeffrey Dean and Luiz André Barroso. The Tail at Scale. Communications of the ACM, 2013. Illustrates Bottleneck-Oriented Optimization (Bo) and Workload-Aware Optimization (Wa).
+
 
 ## HOW TO CITE
 
