@@ -47,327 +47,226 @@ Each principle is tagged with a short symbol (e.g., `Co` for composability, `Op`
 <img width="408" height="423" alt="table" src="https://github.com/user-attachments/assets/f35f47fd-52b0-4ea9-9c85-5fd43d0030f6" />
 
 
-## 🟪 Group 1: Structure
+🟪 Group 1: Structure
 
 🟪 **Si – Simplicity**
 
-Choose the simplest system design that meets current needs; resist complexity, such as additional layers, services, or generality added "just in case", until evidence shows benefit. 
-
-**Example:** Avoid premature architectural optimisation of the system [23].
+Choose the simplest system design that meets current needs; resist complexity, such as additional layers, services, or generality added "just in case," until evidence shows benefit. **Example:**  The UNIX philosophy championed a small kernel with simple abstractions \[41], and the RISC architecture argued for a simpler instruction set to improve performance \[59].
 
 🟪 **Mo – Modularity**
 
-Partition the system into cohesive units with minimal interfaces, so that each unit can be reasoned about, replaced, or evolved independently. This principle focuses on decomposition: choosing boundaries to favor clear separation of concerns so that each responsibility sits in one module.
-
-**Example:** The OSI model decomposes communication into standardised layers with well-defined boundaries that permit independent development and substitution [48].
+Partition the system into cohesive units with minimal interfaces. Each unit can be reasoned about, replaced, or evolved independently. **Example:**  The OSI model decomposes communication into layers \[48]. Parnas advocated information hiding for decomposing systems \[49].
 
 🟪 **Co – Composability**
 
-Design components that can be safely and flexibly recombined; rely on explicit contracts and type-constrained interfaces so that every legal composition remains correct, letting components be assembled like interchangeable bricks. Unlike modularity, this principle focuses on re-composition: making sure the components can be combined safely and flexibly.
-
-**Example:** Unix programs (e.g., grep, sort, uniq) read from stdin and write to stdout, letting the user compose complex text processing pipelines [41].
+Design components that can be safely and flexibly recombined using explicit contracts. **Example:**  Unix programs like grep and sort compose via plain text streams \[41].
 
 🟪 **Ex – Extensibility**
 
-Design systems to allow safe user-defined extensions, such as plug-ins, without requiring changes to the system core. When extensions come from untrusted parties, isolate them through sandboxing to preserve safety.
-
-**Example:** Unix also illustrates extensibility: new programs can be added by the user without kernel changes [41].
+Allow user-defined extensions (e.g., plugins) without modifying the core system. **Example:**  Unix allows adding tools without kernel changes \[41].
 
 🟪 **Pm – Policy/Mechanism Separation**
 
-Separate what should be done (policy) from how it is carried out (mechanism) by exposing a common interface through which multiple policies can plug into the same mechanism.
-
-**Example:** Hydra has a kernel of generic mechanisms (scheduling, paging, protection) and moved resource-allocation policies to user-level modules [32].
+Separate policy (what) from mechanism (how). **Example:**  Hydra OS separated mechanisms in the kernel from policies in user modules \[32].
 
 🟪 **Gr – Generalized Design**
 
-Design a single core with explicit variation points like types, knobs, or plug-ins, so that it can serve many use cases without duplication, but specialise when doing so yields meaningful gains in performance, accuracy, or clarity.
+Create a general core with explicit variation points. **Example:**  C++ STL uses templates; Postgres supports user-defined types \[45, 46].
 
-**Example:** The C++ Standard Template Library is a collection of containers, iterators, and algorithms parameterized by templates [45]. Postgres allows users to add types and operators to the core database system [46].
+🟪 **Ui – Uniform Interface**
 
-🟪 **Ui – Uniform Interface**  Design components to expose the same abstract interface to clients, regardless of internal differences. Enables general tooling and composability.
+Expose a consistent interface regardless of internal implementation. **Example:**  Unix and Plan 9 treat all resources as files \[41, 58].
 
-**Example:** Unix treats everything as a file—sockets, devices, pipes—enabling consistent use of read/write operations [57, 58].
-
-
-## 🟧 Group 2: Efficiency
+🟧 Group 2: Efficiency
 
 🟧 **Sc – Scalability**
 
-Design the system to handle growth in data, traffic, or nodes with near-linear cost or latency.
+Design the system to handle growth in data, traffic, or nodes with near-linear cost or latency. **Example:**  MapReduce divides work into parallel tasks with minimal coordination \[10]. Dynamo partitions data and replicates via peer-to-peer protocols \[12].
 
-**Example:** MapReduce scales across nodes by dividing work into parallel tasks and aggregating results with minimal coordination [10].
-
-🟧 **Rc – Reuse of Computation**
-
-Avoid redundant work by caching, materializing intermediate results (e.g., indexes), or incrementally updating outputs across repeated or slightly modified inputs, saving computation.
-
-**Example:** A B+tree reuses its sorted key order: lookups follow the existing search path instead of rescanning the entire data set each time, thereby reusing computation [2].
+🟧 **Rc – Reuse of ComputationAvoid redundant work by caching or incrementally updating intermediate results. **Example:**  B+trees support reuse by preserving sorted order and enabling efficient searches \[2].
 
 🟧 **Wv – Work Avoidance**
 
-Skip computation that would not alter externally observable results. Examples include lazy evaluation and predicate short-circuiting.
-
-**Example:** Lazy evaluation defers work until a value is demanded, eliminating useless computation [19].
+Skip computation that would not alter externally observable results. **Example:**  Lazy evaluation defers work until needed, avoiding unnecessary computation \[19].
 
 🟧 **Cc – Common-Case Specialization**
 
-Detect the execution paths or data items that dominate run-time ("hot spots") and create a streamlined fast path just for them, while a slower, general path still handles every case correctly.
+Optimize for frequently executed paths or data cases. **Example:**  RISC architecture emphasized common instructions \[59]. JIT compilers cache fast-path methods \[5].
 
-**Example:** Caching the target method for the receiver class on the first call, so that subsequent calls on that common receiver hit the fast path; uncommon classes fall back to the full method-lookup routine [5].
+🟧 **Bo – Bottleneck-Oriented Optimization**
 
-🟧 **Bo – Bottleneck-Oriented Optimisation**
-
-Profile end-to-end performance, locate the tightest resource constraint, and focus improvement effort there until another stage becomes the limiter.
-
-**Example:** Rare 99th-percentile stragglers bottleneck latency, and replicated requests help cut tail response times [9].
+Identify and focus optimization efforts on the tightest system constraint. **Example:**  Replicating requests can reduce tail latencies caused by slow stragglers \[9].
 
 🟧 **Ha – Hardware-Aware Design**
 
-Shape algorithms and data structures to the latency, bandwidth, parallelism, and persistence properties of underlying hardware (e.g., cache hierarchy, NUMA, SSDs, GPUs).
-
-**Example:** BLAS defines cache- and vector-tuned kernels so linear-algebra code exploits hardware efficiently [31].
+Tailor algorithms to match underlying hardware characteristics. **Example:**  BLAS libraries use hardware-tuned kernels for performance \[31].
 
 🟧 **Op – Optimistic Design**
 
-Proceed as if the common case will succeed, skipping coordination, and rely on a (possibly expensive) recovery path only when that assumption proves wrong.
-
-**Example:** Optimistic Concurrency Control runs transactions lock-free, then validates at commit and rolls back only when a conflict is detected [24].
+Proceed assuming common-case success; handle failure as an exception. **Example:**  Optimistic concurrency control executes transactions lock-free and rolls back on conflict \[24].
 
 🟧 **La – Learned Approximation**
 
-Replace hand-crafted algorithms with models trained on data, trading bounded inaccuracy for efficiency or flexibility.
-
-**Example:** The perceptron branch predictor learns weights online to forecast branch outcomes, outperforming fixed two-bit counters without enlarging the table [22].
+Use models trained on data to replace handcrafted algorithms. **Example:**  Perceptron branch predictors outperform static heuristics by learning from behavior \[22].
 
 
-## 🟨 Group 3: Semantics
+#🟨 Group 3: Semantics
 
 🟨 **Al – Abstraction Lifting**
 
-Wrap low-level operations behind a higher-level interface or domain-specific language that expresses intent rather than steps. This enables internal optimization and also allows a single definition to target diverse back-ends.
-
-**Example:** SQL queries declare the result to retrieve; the DBMS chooses access paths, join orders, and physical operators automatically \[44].
+Wrap low-level operations behind a high-level interface or DSL that expresses intent. **Example:**  Codd’s relational model enables SQL to specify what to retrieve; the DBMS decides how \[44].
 
 🟨 **Lu – Language Homogeneity**
 
-Adopt a single, well-specified intermediate representation (or language) across core components and extensions so semantics align, tools compose, and cross-layer optimisations and reuse happen with minimal effort.
-
-**Example:** LLVM exposes a typed, SSA-based IR that many front ends target and many back ends share, enabling cross-language optimisation and reuse of the same middle-end passes \[30].
+Use a consistent intermediate representation to align semantics and simplify tooling. **Example:**  LLVM uses a typed, SSA-based IR shared across many languages \[30].
 
 🟨 **Se – Semantically Explicit Interfaces**
 
-Specify an interface precisely (covering effect visibility, ordering, durability, etc.) so that users can reason about a call’s true externally observable state without guessing about hidden buffering or replication.
-
-**Example:** SQL isolation levels specify precise anomaly semantics and make visibility guarantees explicit \[3].
+Define observable semantics precisely (visibility, durability, ordering). **Example:**  SQL isolation levels and RPC semantics define guarantees \[3, 4].
 
 🟨 **Fs – Formal Specification**
 
-Describe system behaviour using mathematical models or logic to support rigorous reasoning, verification, or synthesis. Mechanisms for realizing this principle include temporal logic, state machines, and other formalisms that make system properties analyzable.
-
-**Example:** TLA+ shows how to specify and check systems using logic and set theory to catch design errors before coding \[27].
+Use mathematical/logical models to describe behavior. **Example:**  TLA+ models concurrency and is used for formal verification \[27].
 
 🟨 **Ig – Invariant-Guided Transformation**
 
-Use formally stated invariants to drive safe refactoring, optimisation, or reconfiguration.
+Use formally defined invariants to safely optimize or refactor. **Example:**  SSA form in compilers and query rewrite rules in DBMSs \[8, 44].
 
-**Example:** In compilers, SSA treats "one definition per name" as an IR invariant; passes rewrite code while preserving semantics and then re-establish SSA \[8]. In query optimisers, relational-algebra equivalences (e.g., selection/projection pushdown) preserve result semantics \[44].
-
-## ⬛ Group 4: Distribution
+⬛ Group 4: Distribution
 
 ⬛ **Lt – Location Transparency**
 
-Hide the physical whereabouts of resources so clients interact via uniform names or handles.
+Hide the physical location of resources behind abstract handles. **Example:**  RPC systems allow invoking remote services as if local \[4].
 
-**Example:** Programs can call remote procedures as if they were local, masking host location \[4].
+⬛ **Dc – Decentralized Control**
 
-⬛ **Dc – Decentralised Control**
-
-Distribute decision-making among many nodes to avoid single points of failure or bottlenecks.
-
-**Example:** Dynamo partitions data via consistent hashing and uses gossip-based membership, avoiding any central coordinator \[12].
+Avoid central points of coordination to improve availability and scalability. **Example:**  Dynamo uses consistent hashing and gossip protocols to eliminate central coordination \[12].
 
 ⬛ **Fp – Function Placement**
 
-Place functionality where the necessary context and resources exist to achieve correctness and efficiency, avoiding redundant work elsewhere.
-
-**Example:** The end-to-end argument shows that functions like reliability checks achieve correctness only at the endpoints \[42].
+Execute functionality where context is available to reduce overhead. **Example:**  End-to-end argument advocates placing reliability checks at communication endpoints [42].
 
 ⬛ **Lo – Locality of Reference**
 
-Place related data and operations close together in time and space to preserve access patterns and minimize separation between computation and state.
-
-**Example:** The working-set model formalises temporal locality to keep hot pages in memory \[11].
+Keep related data and computation close in space/time to improve performance. **Example:**  The working-set model formalizes temporal locality for memory \[11].
 
 ⬛ **Lc – Logical Centralization**
 
-Use centralized decision-making logic even when components are physically distributed. This often simplifies coordination and policy enforcement.
+Use a centralized logic layer over a physically distributed system. **Example:**  SDN centralizes control for global network policy optimization \[53].
 
-**Example:** OpenFlow separates control and data planes, centralizing logic in a controller while maintaining distributed data forwarding \[53].
+⬛ **Fa – Fate Sharing**
 
-⬛ **Fs – Fate Sharing**
-
-Tie the failure semantics of system components to shared context or ownership, ensuring that logically connected elements fail together.
-
-**Example:**  The Internet Protocol’s fate-sharing model embeds state at the edges, such that intermediate node failure does not break higher-level logic \[50].
+Design so that dependent components fail together. **Example:**  Internet design keeps state at endpoints; routers are stateless and can fail independently \[50].
 
 
-## 🟩 Group 5: Planning
+🟩 Group 5: Planning
 
-🟩 **Ep – Equivalence-based Planning**
+🟩 **Ep – Equivalence-Based Planning**
 
-Apply algebraic/logic rewrite rules over a common IR that preserve semantic equivalence; defer final choice to later cost/constraint stages.
+Use rewrite rules to explore logically equivalent alternatives and defer final decision to later cost analysis. **Example:**  Starburst query optimizer applies relational algebra equivalences before choosing plans \[39].
 
-**Example:** Starburst’s rule-based rewrite system applies relational equivalences (e.g., predicate pushdown) to generate logically equivalent queries \[39].
+🟩 **Cm – Cost-Based Planning**
 
-🟩 **Cm – Cost-based Planning**
+Use models of resource cost (e.g., I/O, CPU) to choose between implementation strategies. **Example:**  System R's optimizer selects query plans by estimating cost of each \[44].
 
-When a system must choose among alternative designs, configurations, or execution strategies, use a cost model to guide the search toward low-cost solutions (energy, money, etc.) without needing to enumerate the full space.
+🟩 **Cp – Constraint-Based Planning**
 
-**Example:** The Selinger query optimizer selects the lowest-cost plan under a cost model \[44].
-
-🟩 **Cp – Constraint-based Planning**
-
-Encode decisions and hard or soft constraints and rely on a solver (ILP/SMT etc.) to find a feasible or optimal assignment.
-
-**Example:** Quincy formulates cluster scheduling as a min-cost flow with locality and fairness constraints and solves it to obtain an assignment \[21].
+Encode constraints (hard or soft) and use solvers to generate valid or optimal configurations. **Example:**  Quincy formulates cluster scheduling as a constrained optimization problem \[21].
 
 🟩 **Gd – Goal-Directed Planning**
 
-Accept a declarative description of the desired end-state and automatically synthesise a concrete sequence of operations to reach it, shielding the user from implementation details.
-
-**Example:** The Cascades query optimizer turns an SQL query (the goal) into an executable plan via rule-based transformation and cost-guided search \[14].
+From a declarative goal, synthesize an execution plan automatically. **Example:**  Cascades optimizer transforms SQL queries into efficient plans through rule-based search \[14].
 
 🟩 **Bb – Black-Box Tuning**
 
-When analytic cost models are not available, search the plan/configuration space by measuring candidates on the target system, iteratively choosing better ones (e.g., heuristic or Bayesian search), and caching the winner.
-
-**Example:** ATLAS empirically times candidate BLAS kernel configurations on the target CPU and fixes the best-performing parameters, without an analytic cost model \[47].
+Search parameter/configuration space by measuring candidate performance rather than modeling it. **Example:**  ATLAS tunes BLAS kernels by empirically testing candidate configurations \[47].
 
 🟩 **Ah – Advisory Hinting**
 
-Provide non-binding hints that systems may exploit to improve performance, without changing correctness or requiring enforcement.
+Support non-binding user hints to guide system behavior. **Example:**  Lampson advocated optional hints that help performance but don’t affect correctness \[29].
 
-**Example:** Lampson advocates optional "hints" that help performance but must not affect correctness if ignored \[29].
-
-## 🟦 Group 6: Operability
+🟦 Group 6: Operability
 
 🟦 **Ad – Adaptive Processing**
 
-Monitor runtime conditions and automatically adjust parameters or strategy.
-
-**Example:** Eddies continuously reorder query operators at runtime based on feedback, adapting without stopping execution \[1].
+Monitor runtime conditions and adjust system behavior accordingly. **Example:**  Eddies adapt query execution strategies in response to changing data characteristics \[1].
 
 🟦 **Ec – Elasticity**
 
-Automatically adjust resource allocation in response to shifting demand and cost goals. Examples include predictive autoscaling and load shaping.
+Dynamically allocate or reclaim resources based on demand. **Example:**  Hosting center systems scale resources based on utility functions and load \[6].
 
-**Example:** Chase et al. dynamically provision servers based on load and utility, exemplifying elastic resource management \[6].
+🟦 **Wa – Workload-Aware Optimization**
 
-🟦 **Wa – Workload-Aware Optimisation**
-
-Continuously observe workload shape (skew, locality, access frequency, etc.), and adapt data layouts, algorithm choices, or resource allocations to match current patterns.
-
-**Example:** Database "cracking" incrementally reorganises column data based on query predicates, adapting the data layout continuously to the observed workload \[20].
+Adapt data layout, algorithms, or scheduling to the observed workload. **Example:**  Database cracking incrementally reorganizes data based on queries \[20].
 
 🟦 **Au – Automation and Autonomy**
 
-Let the system perform routine or reactive tasks without human intervention, often by learning from traces or user-provided examples.
-
-**Example:** AutoAdmin automatically recommends indexes/materialized views from workload traces \[7]. Programming-by-example systems automate tasks by generalizing from a few user-provided examples \[33].
+Automate system tuning, recovery, or adaptation without human intervention. **Example:**  AutoAdmin suggests indexes based on observed workloads \[7].
 
 🟦 **Ho – Human Observability**
 
-Expose internal state of the system, like metrics, traces, plans, to make the system intentionally transparent; that transparency improves observability, debugging, introspection, and control.
-
-**Example:** Paxson’s end-to-end Internet packet dynamics analysis demonstrates how rich measurement and tracing enable informed debugging and tuning \[37].
+Expose internal state for debugging and performance analysis. **Example:**  Paxson’s end-to-end Internet measurements aid in fault diagnosis \[37].
 
 🟦 **Ev – Evolvability**
 
-Design so the system can change with minimal downtime or rewrites and do so without breaking external contracts or observable behaviour for existing clients. Unlike extensibility that lets outsiders add new behavior via defined hook points without touching the core, evolvability lets the system’s internals change over time without breaking existing external contracts.
-
-**Example:** Parnas presents how a modular design makes system easier to extend without disruptive rewrites \[36].
+Support ongoing system evolution with minimal disruption. **Example:**  Parnas’s modular design enables safe changes without breaking clients \[36, 49].
 
 🟦 **Pi – Performance Isolation**
 
-Ensure one workload’s behavior does not adversely affect another’s performance or correctness, especially in shared environments.
-
-**Example:** Virtual machines enforce resource partitioning, maintaining QoS for tenants in cloud settings \[55].
+Ensure one workload does not degrade others in shared environments. **Example:**  VMware and container systems enforce resource limits across tenants \[55].
 
 
-## 🟥 Group 7: Reliability
+🟥 Group 7: Reliability
 
 🟥 **Ft – Fault Tolerance**
 
-Design the system to continue operating, perhaps in degraded form, despite component failures.
-
-**Example:** Gray’s analysis of why computers stop shows that replication and automatic restart let services keep running through hardware and software faults \[15].
+Continue functioning (possibly in degraded mode) despite component failures. **Example:**  Tandem systems used replicated hardware; GFS recovers from faults through replication \[15, 51].
 
 🟥 **Is – Isolation for Correctness**
 
-Prevent unintended interference among components so local reasoning remains valid.
-
-**Example:** Two-phase row-level locking stops one transaction from reading or overwriting another’s uncommitted data, preserving isolation guarantees \[16].
+Prevent unintended interference between concurrent components. **Example:**  Two-phase locking ensures ACID-compliant isolation in databases \[16].
 
 🟥 **At – Atomic Execution**
 
-Group multiple operations so they appear indivisible, either all take effect or none do.
-
-**Example:** With Transactional Memory, memory operations inside a transaction speculatively execute, then commit atomically; if any conflict or fault occurs, the entire block aborts and leaves no partial state \[18].
+Execute a set of operations indivisibly: all or none take effect. **Example:**  Transactional memory ensures that a memory block either commits or aborts atomically \[18].
 
 🟥 **Cr – Consistency Relaxation**
 
-Deliberately relax strong consistency or ordering constraints, but only within documented bounds, to improve performance, availability, or concurrency.
-
-**Example:** Bayou lets mobile clients update replicas while disconnected, guaranteeing eventual convergence when replicas reconnect, trading strict consistency for offline availability \[38].
-
+Relax strict consistency guarantees to improve availability or performance. **Example:**  Dynamo offers eventual consistency; Spanner relaxes serializability using bounded time uncertainty \[12, 59].
 
 🟥 **De – Deterministic Execution**
 
+Ensure the system produces the same observable output for the same input. **Example:**  Deterministic replay systems like ReVirt and ODR support reproducible debugging \[52, 54].
 
-Design systems to produce the same observable behavior given the same inputs. Improves reproducibility, auditing, and fault recovery.
+🟥 **Cd – Crash-Only Design**
 
-**Example:**  Systems like ReVirt and ODR use deterministic execution to enable replay-based debugging and intrusion analysis \[54].
+Design systems to safely crash and recover, avoiding complex error-handling logic. **Example:**  GFS and similar systems reboot into a clean state rather than attempting in-place repair \[13].
 
-🟥 Cd – Crash-Only DesignTreat crashes as a normal mode of recovery. Eliminate explicit shutdown paths and design for instant restart. This simplifies error handling and improves resilience.Example: Systems like the Google File System and Crash-Only Software treat process death as routine, relying on restart rather than intricate cleanup [51]
-
-## 🟫 Group 8: Security
+🟫 Group 8: Security
 
 🟫 **Sy – Security via Isolation**
 
-Enforce strong boundaries so faults or hostile code cannot affect other components.
-
-**Example:** A correct virtual machine monitor presents each guest with a complete, isolated machine and intercepts privileged operations, preventing one guest from compromising others or the host \[40].
+Use strong isolation boundaries to contain faults or malicious activity. **Example:**  Virtual machine monitors isolate guests and intercept privileged operations \[40].
 
 🟫 **Ac – Access Control and Auditing**
 
-Define permissions and log every access for accountability.
-
-**Example:** Lampson’s taxonomy of access-control lists, capabilities, and audit trails underpins modern security mechanisms \[28].
+Define and enforce permissions; log accesses for accountability. **Example:**  Lampson's taxonomy underpins ACLs, capabilities, and audit trails \[28].
 
 🟫 **Lp – Least Privilege**
 
-Grant only minimal authority needed for a task, shrinking the blast radius.
-
-**Example:** The post-mortem on the 1988 Internet Worm shows how excess privilege let the worm spread and spurred widespread adoption of least-privilege daemons \[35].
+Grant only the minimum required authority to users or components. **Example:**  Seeley's postmortem on the 1988 worm highlighted excess privilege as a vector \[35].
 
 🟫 **Tq – Trust via Quorum**
 
-Rely on agreement from multiple, independent participants rather than a single authority.
-
-**Example:** Paxos algorithm replicates state across a majority quorum so the service stays correct even if minority nodes crash or act maliciously \[26].
+Require agreement among independent nodes to tolerate faults or attacks. **Example:**  Paxos relies on majority consensus to maintain correctness under failures \[26].
 
 🟫 **Cf – Conservative Defaults**
 
-Ship with restrictive, safe settings; let experts opt-in to riskier, faster modes.
-
-**Example:** With a "default no-access" policy, every protection mechanism should allow access only when explicitly granted \[43].
+Use restrictive defaults to minimize accidental exposure or risk. **Example:**  Default-deny access policies require explicit permission to grant access \[43].
 
 🟫 **Sa – Safety by Construction**
 
-Structure code or data so entire classes of errors become impossible rather than merely detected.
-
-**Example:** Rust’s ownership and borrow checker prevent data races and dangling pointers at compile time \[34].
+Design code or APIs to eliminate classes of bugs by design. **Example:**  Rust’s ownership model prevents memory errors; seL4 is formally verified \[34, 56].
 
 ## 4. CASE STUDY
 
@@ -399,121 +298,113 @@ System design spans diverse domains and vocabularies, which can make shared disc
 
 ## REFERENCES
 
-[1] Ron Avnur and Joseph M. Hellerstein. Eddies: Continuously Adaptive Query Processing. In SIGMOD, 2000. Supports Adaptive Processing (Ad).
+[1] Ron Avnur and Joseph M. Hellerstein. Eddies: Continuously Adaptive Query Processing. SIGMOD, 2000.
 
-[2] Rudolf Bayer and Edward McCreight. Organization and Maintenance of Large Ordered Indexes. Acta Informatica, 1972. Supports Reuse of Computation (Rc).
+[2] Rudolf Bayer and Edward McCreight. Organization and Maintenance of Large Ordered Indexes. Acta Informatica, 1972.
 
-[3] Hal Berenson, Philip A. Bernstein, Jim Gray, Jim Melton, Elizabeth J. O’Neil, and Patrick E. O’Neil. A Critique of ANSI SQL Isolation Levels. In SIGMOD, 1995. Supports Semantically Explicit Interfaces (Se).
+[3] Hal Berenson et al. A Critique of ANSI SQL Isolation Levels. SIGMOD, 1995.[4] Andrew D. Birrell and Bruce J. Nelson. Implementing Remote Procedure Calls. ACM TOCS, 1984.
 
-[4] Andrew D. Birrell and Bruce J. Nelson. Implementing Remote Procedure Calls. ACM TOCS, 1984. Supports Location Transparency (Lt).
+[5] Craig Chambers and David Ungar. Customization: Optimizing Compiler Technology for SELF. PLDI, 1989.
 
-[5] Craig Chambers and David Ungar. Customization: Optimizing Compiler Technology for SELF. In PLDI, 1989. Supports Common-Case Specialization (Cc).
+[6] Jeffrey S. Chase et al. Managing Energy and Server Resources in Hosting Centers. SOSP, 2001.
 
-[6] Jeffrey S. Chase et al. Managing Energy and Server Resources in Hosting Centers. In SOSP, 2001. Supports Elasticity (Ec).
+[7] Surajit Chaudhuri and Vivek Narasayya. An Efficient, Cost-Driven Index Selection Tool for Microsoft SQL Server. VLDB, 1997.
 
-[7] Surajit Chaudhuri and Vivek R. Narasayya. An Efficient, Cost-Driven Index Selection Tool for Microsoft SQL Server. In VLDB, 1997. Supports Automation and Autonomy (Au).
+[8] Ron Cytron et al. Efficiently Computing Static Single Assignment Form and the Control Dependence Graph. ACM TOPLAS, 1991.
 
-[8] Ron Cytron et al. Efficiently Computing Static Single Assignment Form and the Control Dependence Graph. ACM TOPLAS, 1991. Supports Invariant-Guided Transformation (Ig).
+[9] Jeff Dean and Luiz André Barroso. The Tail at Scale. CACM, 2013.
 
-[9] Jeff Dean and Luiz André Barroso. The Tail at Scale. Communications of the ACM, 2013. Illustrates Bottleneck-Oriented Optimization (Bo) and Workload-Aware Optimization (Wa).
+[10] Jeffrey Dean and Sanjay Ghemawat. MapReduce. OSDI, 2004.
 
-[10] Jeffrey Dean and Sanjay Ghemawat. MapReduce: Simplified Data Processing on Large Clusters. In OSDI, 2004. Supports Scalability (Sc).
+[11] Peter J. Denning. The Working Set Model for Program Behavior. CACM, 1968.
 
-[11] Peter J. Denning. The Working Set Model for Program Behavior. Communications of the ACM, 1968. Supports Locality of Reference (Lo).
+[12] Giuseppe DeCandia et al. Dynamo. SOSP, 2007.
 
-[12] Giuseppe DeCandia et al. Dynamo: Amazon’s Highly Available Key-Value Store. In SOSP, 2007. Supports Decentralized Control (Dc).
+[13] George Candea and Armando Fox. Crash-Only Software. HOTOS, 2003.
 
-[13] Sally Floyd and Van Jacobson. Random Early Detection Gateways for Congestion Avoidance. In SIGCOMM, 1993.
+[14] Goetz Graefe. Cascades Framework for Query Optimization. HPL-95-18, 1995.
 
-[14] Goetz Graefe. The Cascades Framework for Query Optimisation. HPL Technical Report HPL-95-18, 1995. Supports Goal-Directed Planning (Gd).
+[15] Jim Gray. Why Do Computers Stop and What Can Be Done About It? Tandem Tech Report, 1986.
 
-[15] Jim Gray. Why Do Computers Stop and What Can Be Done About It? Tandem Technical Report, 1986. Supports Fault Tolerance (Ft).
+[16] Jim Gray and Andreas Reuter. Transaction Processing. Morgan Kaufmann, 1993.
 
-[16] Jim Gray and Andreas Reuter. Transaction Processing: Concepts and Techniques. Morgan Kaufmann, 1993. Supports Isolation for Correctness (Is).
+[17] Jim Gray et al. Granularity of Locks in a Shared Data Base. VLDB, 1975.
 
-[17] J. N. Gray et al. Granularity of Locks in a Shared Data Base. In VLDB, 1975.
+[18] Maurice Herlihy and J. Eliot B. Moss. Transactional Memory. ISCA, 1993.
 
-[18] Maurice Herlihy and J. Eliot B. Moss. Transactional Memory: Architectural Support for Lock-Free Data Structures. In ISCA, 1993. Supports Atomic Execution (At).
+[19] John Hughes. Why Functional Programming Matters. Addison-Wesley, 1990.[20] Stratos Idreos et al. Database Cracking. CIDR, 2007.
 
-[19] John Hughes. Why Functional Programming Matters. In Research Topics in Functional Programming, Addison-Wesley, 1990. Supports Work Avoidance (Wv).
+[21] Michael Isard et al. Quincy. SOSP, 2009.
 
-[20] Stratos Idreos et al. Database Cracking. In CIDR, 2007. Supports Workload-Aware Optimization (Wa).
+[22] Daniel Jiménez and Calvin Lin. Dynamic Branch Prediction with Perceptrons. HPCA, 2001.
 
-[21] Michael Isard et al. Quincy: Fair Scheduling for Distributed Computing Clusters. In SOSP, 2009. Supports Constraint-Based Planning (Cp).
+[24] H. T. Kung and John T. Robinson. On Optimistic Methods for Concurrency Control. ACM TODS, 1981.
 
-[22] Daniel A. Jiménez and Calvin Lin. Dynamic Branch Prediction with Perceptrons. In HPCA, 2001. Supports Learned Approximation (La).
+[26] Leslie Lamport. The Part-Time Parliament. ACM TOCS, 1998.
 
-[23] Donald E. Knuth. Structured Programming with go to Statements. ACM Computing Surveys, 1974. Supports Simplicity (Si).
+[27] Leslie Lamport. Specifying Systems: The TLA+ Language. Addison-Wesley, 2002.
 
-[24] H. T. Kung and John T. Robinson. On Optimistic Methods for Concurrency Control. ACM TODS, 1981. Supports Optimistic Design (Op).
+[28] Butler Lampson. Protection. ACM Operating Systems Review, 1974.
 
-[25] Leslie Lamport. The Part-Time Parliament. ACM TOCS, 1998.
+[29] Butler Lampson. Hints for Computer System Design. ACM OS Review, 1983.
 
-[26] Leslie Lamport. The Part-Time Parliament. ACM TOCS, 1998. Supports Trust via Quorum (Tq).
+[30] Chris Lattner and Vikram Adve. LLVM. CGO, 2004.
 
-[27] Leslie Lamport. Specifying Systems: The TLA+ Language and Tools for Hardware and Software Engineers. Addison-Wesley, 2002. Supports Formal Specification (Fs).
+[31] C. L. Lawson et al. Basic Linear Algebra Subprograms. ACM TOMS, 1979.
 
-[28] Butler W. Lampson. Protection. ACM Operating Systems Review, 1974. Supports Access Control and Auditing (Ac).
+[32] R. Levin et al. Policy/Mechanism Separation in Hydra. SOSP, 1975.
 
-[29] Butler W. Lampson. Hints for Computer System Design. ACM Operating Systems Review, 1983. Supports Advisory Hinting (Ah).
+[33] Henry Lieberman. Your Wish is My Command: Programming by Example. Morgan Kaufmann, 2001.
 
-[30] Chris Lattner and Vikram Adve. LLVM: A Compilation Framework for Lifelong Program Analysis & Transformation. In CGO, 2004. Supports Language Homogeneity (Lu).
+[34] Nicholas Matsakis and Felix Klock. The Rust Language. ACM SIGAda, 2014.
 
-[31] C. L. Lawson et al. Basic Linear Algebra Subprograms for Fortran Usage. ACM TOMS, 1979. Supports Hardware-Aware Design (Ha).
+[35] Donn Seeley. A Tour of the Worm. USENIX, 1989.
 
-[32] R. Levin et al. Policy/Mechanism Separation in Hydra. In SOSP, 1975. Supports Policy/Mechanism Separation (Pm).
+[36] David Parnas. Designing Software for Ease of Extension and Contraction. IEEE TSE, 1979.
 
-[33] Henry Lieberman. Your Wish is My Command: Programming by Example. Morgan Kaufmann, 2001. Supports Automation and Autonomy (Au).
+[37] Vern Paxson. End-to-End Internet Packet Dynamics. IEEE/ACM TON, 1999.
 
-[34] Nicholas D. Matsakis and Felix Klock. The Rust Language. In ACM SIGAda, 2014. Supports Safety by Construction (Sa).
+[38] Ken Petersen et al. Flexible Update Propagation for Weakly Consistent Replication. SOSP, 1997.
 
-[35] Robert T. Morris. A Tour of the Worm. USENIX, 1989. Supports Least Privilege (Lp).
+[39] Hamid Pirahesh et al. Rule-Based Query Rewrite in Starburst. SIGMOD, 1992.
 
-[36] David L. Parnas. Designing Software for Ease of Extension and Contraction. IEEE TSE, 1979. Supports Evolvability (Ev).
+[40] Gerald Popek and Robert Goldberg. Formal Requirements for Virtualizable Architectures. CACM, 1974.
 
-[37] Vern Paxson. End-to-End Internet Packet Dynamics. IEEE/ACM TON, 1999. Supports Human Observability (Ho).
+[41] Dennis Ritchie and Ken Thompson. The UNIX Time-Sharing System. CACM, 1974.
 
-[38] K. Petersen et al. Flexible Update Propagation for Weakly Consistent Replication. In SOSP, 1997. Supports Consistency Relaxation (Cr).
+[42] J. H. Saltzer et al. End-to-End Arguments. ACM TOCS, 1984.
 
-[39] Hamid Pirahesh et al. Extensible/Rule-Based Query Rewrite Optimization in Starburst. In SIGMOD, 1992. Supports Equivalence-Based Planning (Ep).
+[43] Saltzer and Schroeder. Protection of Information in Computer Systems. Proc. IEEE, 1975.
 
-[40] Gerald J. Popek and Robert P. Goldberg. Formal Requirements for Virtualizable Third Generation Architectures. Communications of the ACM, 1974. Supports Security via Isolation (Sy).
+[44] Patricia Selinger et al. Access Path Selection. SIGMOD, 1979.
 
-[41] Dennis M. Ritchie and Ken Thompson. The UNIX Time-Sharing System. Communications of the ACM, 1974. Supports Uniform Interface (Ui) and Composability (Co).
+[45] Alexander Stepanov and Meng Lee. The Standard Template Library. HP Tech Report, 1994.
 
-[42] J. H. Saltzer et al. End-to-End Arguments in System Design. ACM TOCS, 1984. Supports Function Placement (Fp).
+[46] Michael Stonebraker and Lawrence Rowe. The Design of POSTGRES. SIGMOD, 1986.
 
-[43] Jerome H. Saltzer and Michael D. Schroeder. The Protection of Information in Computer Systems. Proc. IEEE, 1975. Supports Conservative Defaults (Cf).
+[47] Clint Whaley and Jack Dongarra. ATLAS. SC, 1998.
 
-[44] Patricia G. Selinger et al. Access Path Selection in a Relational Database Management System. In SIGMOD, 1979. Supports Abstraction Lifting (Al), Equivalence-Based Planning (Ep), and Cost-Based Planning (Cm).
+[48] Hubert Zimmermann. OSI Reference Model. IEEE Comm, 1980.
 
-[45] Alexander A. Stepanov and Meng Lee. The Standard Template Library. HP Laboratories Technical Report, 1994. Supports Generalized Design (Gr).
+[49] David Parnas. On the Criteria to Be Used in Decomposing Systems. CACM, 1972.
 
-[46] Michael Stonebraker and Lawrence A. Rowe. The Design of POSTGRES. In SIGMOD, 1986. Supports Generalized Design (Gr).
+[50] David Clark. The DARPA Internet Protocols. SIGCOMM, 1988.
 
-[47] R. Clint Whaley and Jack J. Dongarra. Automatically Tuned Linear Algebra Software. In SC, 1998. Supports Black-Box Tuning (Bb).
+[51] George Candea and Armando Fox. Crash-Only Software. HOTOS, 2003.
 
-[48] Hubert Zimmermann. OSI Reference Model – The ISO Model of Architecture for Open Systems Interconnection. IEEE Transactions on Communications, 1980. Supports Modularity (Mo)
+[52] Sudipta Chattopadhyay et al. ODR: Output-Derived Replay. PLDI, 2010.
 
-[49] David L. Parnas. On the Criteria To Be Used in Decomposing Systems into Modules. Communications of the ACM, 1972. Supports Modularity (Mo) and Evolvability (Ev).
+[53] Nick McKeown et al. OpenFlow. ACM SIGCOMM CCR, 2008.
 
-[50] David D. Clark. The Design Philosophy of the DARPA Internet Protocols. In SIGCOMM, 1988. Introduces Function Placement (Fp) and Fate Sharing (Fs).
+[54] George Dunlap et al. ReVirt. OSDI, 2002.
 
-[51] George Candea and Armando Fox. Crash-Only Software. In HOTOS, 2001. Introduces Crash-Only Design (Cd); aligns with Fault Tolerance (Ft) and Atomic Execution (At).
+[55] Carl Waldspurger. Memory Resource Management in VMware ESX. OSDI, 2002.
 
-[52] Sudipta Chattopadhyay, Abhik Roychoudhury, and Tulika Mitra. ODR: Output-Derived Replay for Multicore Debugging. In PLDI, 2010. Example of Deterministic Execution (De); supports Ft and Formal Specification (Fs).
+[56] Gerwin Klein et al. seL4: Formal Verification of an OS Kernel. SOSP, 2009.
 
-[53] Nick McKeown et al. OpenFlow: Enabling Innovation in Campus Networks. ACM SIGCOMM CCR, 2008. Example of Logical Centralization (Lc), contrasts with Decentralized Control (Dc).
+[58] Rob Pike et al. Plan 9 from Bell Labs. UKUUG, 1990.
 
-[54] George W. Dunlap et al. ReVirt: Enabling Intrusion Analysis through Virtual-Machine Logging and Replay. In OSDI, 2002. Reinforces Deterministic Execution (De) and Formal Specification (Fs).[55] Brandon Klein et al. Performance Isolation Through Virtualization. In OSDI, 2007. Demonstrates Performance Isolation (Pi) in multitenant systems; related to Isolation (Is).
-
-[56] Gerwin Klein et al. seL4: Formal Verification of an OS Kernel. In SOSP, 2009. Shows Formal Specification (Fs) and Safety by Construction (Sa) in practice.
-
-[57] Dennis M. Ritchie and Ken Thompson. The UNIX Time-Sharing System. Communications of the ACM, 1974. Historical basis for Uniform Interface (Ui) and Composability (Co).
-
-[58] LWN.net. Everything is a File. https://lwn.net/Articles/23634/, 2002. Supports Uniform Interface (Ui) and Composability (Co).
-
-[59] Jeffrey Dean and Luiz André Barroso. The Tail at Scale. Communications of the ACM, 2013. Illustrates Bottleneck-Oriented Optimization (Bo) and Workload-Aware Optimization (Wa).
+[59] James Corbett et al. Spanner: Google's Globally-Distributed Database. OSDI, 2012. David A. Patterson and Carlo H. Séquin. A Reduced Instruction Set Computer. ISCA, 1981.
 
 
 ## HOW TO CITE
